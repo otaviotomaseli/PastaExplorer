@@ -173,6 +173,32 @@ python set_password.py
 # pede usuário, senha, gera hash + SECRET + 2FA reset
 ```
 
+### 🔄 Serviço Auto-Start (reinicia sozinho)
+
+**Windows (recomendado):**
+```bat
+# 1 clique como Administrador:
+service\install.bat
+# ou
+powershell -ExecutionPolicy Bypass -File service/install.ps1
+```
+Cria tarefa **PastaExplorer** (`SYSTEM`, `ONSTART`, `HIGHEST`) + atalho na Inicialização. Watchdog `service/watchdog.ps1` mantém `python app.py` vivo (reinicia em 5s se cair, loga perda de internet).
+
+- Ver: `schtasks /Query /TN PastaExplorer /FO LIST /V` e `service/logs/pastaexplorer.log`
+- Remover: `service\uninstall.bat` (como Admin)
+
+**Fallback sem Admin:** atalho em `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\PastaExplorer.lnk` já criado — inicia ao logar.
+
+**Linux (systemd):**
+```bash
+sudo bash service/install_linux.sh
+sudo systemctl status pastaexplorer
+tail -f /var/log/pastaexplorer.log
+```
+`Restart=always`, `After=network-online.target` — inicia ao boot, se cair ou se a internet cair.
+
+Veja `service/README.md` para detalhes.
+
 ---
 
 ## ⚙️ Configurações (botão ⚙️ no Explorer)

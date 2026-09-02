@@ -1,0 +1,30 @@
+[Unit]
+Description=PastaExplorer - Explorador de Arquivos Web
+After=network.target network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/opt/PastaExplorer
+ExecStart=/usr/bin/python3 app.py
+Restart=always
+RestartSec=5
+StartLimitInterval=60
+StartLimitBurst=3
+
+# Logs
+StandardOutput=append:/var/log/pastaexplorer.log
+StandardError=append:/var/log/pastaexplorer.log
+
+# Ambiente
+Environment=PYTHONUNBUFFERED=1
+Environment=PORT=5000
+Environment=HOST=0.0.0.0
+
+# Segurança: reinicia se internet cair (não para, mas garante)
+# Se precisar de proxy, adicione aqui
+
+[Install]
+WantedBy=multi-user.target
